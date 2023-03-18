@@ -2,6 +2,54 @@ import math
 import numpy as np
 
 
+class gestures_database():
+    def __init__(self,file_name):
+        self.file_name = file_name
+
+
+
+    def add_gesture(self):
+        gesture = { 'handDirection' : None,
+                    'thumbDirection' : None,
+                    'thumb' : None,
+                    'index' : None,
+                    'middle': None,
+                    'ring'  : None,
+                    'pinky' : None}
+
+        name = input('enter new gesture name: ')
+
+        for i in range(0,2):
+            key = gesture.keys()[i]
+            acceptable_values = ["up", "down", "right", "left","on"]
+
+            answer = input(f'enter {key}: "up", "down", "right", "left" or "on": ')
+
+            while answer not in acceptable_values:
+                print('you enter wrong value, try again or enter "close" to exit entry')
+                answer=input(f'enter {key}: "up", "down", "right", "left" or "on": ')
+            gesture[key] = answer
+
+
+        for i in range(2,7):
+            key = gesture.keys()[i]
+            acceptable_values = ['yes','no']
+
+            answer = input(f'enter is {key} raised ("yes"/"no"): ')
+
+            while answer not in acceptable_values:
+                print('you enter wrong value, try again or enter "close" to exit entry')
+                answer = input(f'enter is {key} raised ("yes"/"no"): ')
+            gesture[key] = answer=='yes'
+
+
+        with open(self.file_name) as file:
+            gestures_base = json.load(file)
+            gestures_base[name]=gesture
+            json.dump(gestures_base, file)
+            print(file.read())
+
+
 class Finger():
     def __init__(self, currentPos, name='', isRaised=True) -> None:
         self.name = name
